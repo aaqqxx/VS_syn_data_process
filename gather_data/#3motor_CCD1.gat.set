@@ -1,0 +1,12 @@
+Gather.Enable=0
+Gather.Addr[0]=Sys.ServoCount.a
+Gather.Addr[1]=Sys.M[8192].a
+Gather.Addr[2]=Motor[3].ActPos.a
+Gather.Addr[3]=Motor[3].DesPos.a
+Gather.Addr[4]=Motor[3].iqcmd.a
+Gather.Items=5
+Gather.Period=10
+Gather.Enable=1
+Gather.Enable=0
+Gather.MaxSamples=1000
+Sys.ServoPeriod=0.442673749446657994

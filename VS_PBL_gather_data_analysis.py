@@ -59,6 +59,23 @@ def get_CCD_pos(CCD_volt, min_volt=-10, max_volt=10, min_pos=0, max_pos=600000):
     pass
 
 
+def get_CCD_pos1(CCD_volt_dig, dig2mm=1080):
+    """
+
+    :param CCD_volt:
+    :param min_volt:
+    :param max_volt:
+    :param min_pos:
+    :param max_pos:单位0.1um 
+    :return:
+    """
+
+    CCD_pos = CCD_volt_dig/dig2mm*10000 #+30
+    return CCD_pos
+    pass
+
+
+
 def get_gather_data(gather_data_file):
     data_all = np.loadtxt(gather_data_file, unpack=True, skiprows=1)
     gather_setting = Gather_Setting()
@@ -97,8 +114,50 @@ def get_gather_data(gather_data_file):
     pass
 
 
+def get_gather_data1(gather_data_file):
+    data_all = np.loadtxt(gather_data_file, unpack=True, skiprows=1)
+    gather_setting = Gather_Setting()
+    time = data_all[0]
+    CCD_volt = data_all[1]
+    CCD_pos = -get_CCD_pos1(CCD_volt)
+    print CCD_pos
+    CCD_pos = CCD_pos - CCD_pos[0]
+
+    PBL_pos = data_all[2]
+    PBL_pos = PBL_pos - PBL_pos[0]
+    PBL_vel = get_vel(PBL_pos)
+    des_pos = data_all[3] - data_all[3][0]
+
+    ccd = CCD_pos - CCD_pos[1]
+    pbl = des_pos - des_pos[0]
+
+    CCD_fe = pbl - ccd
+
+    # PLB_vel = data_all[2]
+    # plt.plot(CCD_p    os,label="CCD_pos")
+    vel = get_vel(CCD_pos)
+    print pbl.max(), ccd.max()
+    ax1 = plt.axes()
+    ax2 = plt.twinx(ax1)
+    # ax1.plot(-vel , label="CCD_vel")
+    # ax1.plot(PBL_vel, label="BPL_vel")
+    # ax2.plot(CCD_fe, label="CCD_fe",color="r")
+
+    l1=ax1.plot(PBL_pos, label="PBL_pos")
+    l2=ax1.plot(CCD_pos, label="CCD_pos")
+    l = l1+l2
+    print dir(l[0])
+    lb = [each.get_label() for each in l]
+    FE = PBL_pos - CCD_pos
+    ax2.plot(FE - FE[0])
+
+    plt.legend(l,lb)
+    plt.show()
+    pass
+
+
 def main():
-    get_gather_data("gather_data/#3motor_CCD1.gat")
+    get_gather_data1("gather_data/#3motor_CCD1.gat")
 
 
 if __name__ == '__main__':
